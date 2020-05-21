@@ -1,6 +1,6 @@
 {
   "name": "@davidsemakula/draft-js-emoji-plugin",
-  "version": "0.1.0-rc.36",
+  "version": "0.1.0",
   "description": "Emoji Plugin for DraftJS",
   "author": {
     "name": "David Semakula",
