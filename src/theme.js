@@ -210,6 +210,10 @@ export const defaultTheme = {
   emojiSelectPopoverGroup: css`
     padding: 0 0.5em;
 
+    &:last-child {
+      min-height: 110%;
+    }
+
     &:first-child .${emojiSelectPopoverGroupTitle} {
       display: none;
     }

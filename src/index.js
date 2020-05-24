@@ -94,15 +94,15 @@ export default (config = {}) => {
     toneSelectOpenDelay,
     useNativeArt,
     excludedEmojis,
+    customEmojis,
   } = config;
+  const cacheBustParam = allowImageCache ? '' : defaultCacheBustParam,
+    emojisWithUnicodeList = keys(emojiList.list);
 
-  const cacheBustParam = allowImageCache ? '' : defaultCacheBustParam;
+  let filteredEmojiMap = {},
+    excludedShortNames = [];
 
-  let excludedShortNames = [];
-
-  let filteredEmojiMap = {};
   if(excludedEmojis && Array.isArray(excludedEmojis) && excludedEmojis.length) {
-    const emojisWithUnicodeList = keys(emojiList.list);
     for (let name of Object.keys(defaultEmojiMap)) {
       const shortName = defaultEmojiMap[name].shortname;
       if(!emojisWithUnicodeList.includes(shortName) || excludedEmojis.map(i => [name, shortName].includes(i) || (new RegExp(`${name}_tone(.*)`)).test(i) || (new RegExp(`${shortName.replace(':', '')}_tone(.*)`)).test(i)).filter(i => i).length) {
@@ -113,6 +113,13 @@ export default (config = {}) => {
     }
   } else {
     filteredEmojiMap = {...defaultEmojiMap};
+  }
+
+  for (let emoji of customEmojis) {
+    const { shortname, image } = emoji;
+    if(shortname && image && !emojisWithUnicodeList.includes(shortname)) {
+      filteredEmojiMap[shortname.replace(/:/ig, '')] = emoji;
+    }
   }
 
   const filteredEmojis = createEmojisFromMap(filteredEmojiMap);
@@ -128,8 +135,11 @@ export default (config = {}) => {
     theme,
     store,
     positionSuggestions,
-    shortNames: List(keys(emojiList.list).filter(i => !excludedShortNames.includes(i))),
+    shortNames: List(
+      keys(emojiList.list).filter(i => !excludedShortNames.includes(i))
+        .concat((customEmojis || []).map(emoji => emoji.shortname))),
     useNativeArt,
+    customEmojis,
   };
   const selectProps = {
     cacheBustParam,
@@ -143,6 +153,7 @@ export default (config = {}) => {
     useNativeArt,
     emojiMap: filteredEmojiMap,
     emojis: filteredEmojis,
+    customEmojis,
   };
   const DecoratedEmojiSuggestions = props => (
     <EmojiSuggestions {...props} {...suggestionsProps} />
@@ -158,6 +169,7 @@ export default (config = {}) => {
       imageType={imageType}
       cacheBustParam={cacheBustParam}
       useNativeArt={useNativeArt}
+      customEmojis={customEmojis}
     />
   );
   const DecoratedEmojiSuggestionsPortal = props => (
@@ -195,7 +207,7 @@ export default (config = {}) => {
     handleReturn: keyboardEvent =>
       callbacks.handleReturn && callbacks.handleReturn(keyboardEvent),
     onChange: editorState => {
-      let newEditorState = attachImmutableEntitiesToEmojis(editorState);
+      let newEditorState = attachImmutableEntitiesToEmojis(editorState, customEmojis);
 
       if (
         !newEditorState

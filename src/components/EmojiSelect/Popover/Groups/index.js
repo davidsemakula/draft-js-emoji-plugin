@@ -118,6 +118,7 @@ export default class Groups extends Component {
       onEmojiSelect,
       onEmojiMouseDown,
       useNativeArt,
+      customEmojis,
     } = this.props;
 
     return (
@@ -163,6 +164,7 @@ export default class Groups extends Component {
               }}
               useNativeArt={useNativeArt}
               isActive={this.isRenderedGroupActive(index)}
+              customEmojis={customEmojis}
             />
           ))}
         </Scrollbars>

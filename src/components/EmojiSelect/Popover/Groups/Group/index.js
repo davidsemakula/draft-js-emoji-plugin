@@ -53,9 +53,10 @@ export default class Group extends Component {
       onEmojiMouseDown,
       useNativeArt,
       isActive,
+      customEmojis,
     } = this.props;
 
-    const categoryEmojis = emojis[category];
+    const categoryEmojis = emojis[category] || {};
 
     return Object.keys(categoryEmojis).map(key => (
       <li
@@ -76,6 +77,7 @@ export default class Group extends Component {
             onEmojiSelect={onEmojiSelect}
             onEmojiMouseDown={onEmojiMouseDown}
             useNativeArt={useNativeArt}
+            customEmojis={customEmojis}
           />
         )}
       </li>

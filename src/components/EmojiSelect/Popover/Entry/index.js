@@ -64,31 +64,52 @@ export default class Entry extends Component {
       theme = {},
       emoji,
       useNativeArt,
+      customEmojis
     } = this.props;
-    const { isFocused } = this.state;
 
     let emojiDisplay = null;
-    if (useNativeArt === true) {
-      const unicode = emojiList.list[emoji][0];
-      emojiDisplay = convertShortNameToUnicode(unicode);
-    } else {
-      // short name to image url code steal from emojione source code
-      const shortNameForImage =
-        emojione.emojioneList[emoji].unicode[
+
+    const { isFocused } = this.state;
+
+    if(emojiList.list[emoji]) {
+      if (useNativeArt === true) {
+        const unicode = emojiList.list[emoji][0];
+        emojiDisplay = convertShortNameToUnicode(unicode);
+      } else {
+        // short name to image url code steal from emojione source code
+        const shortNameForImage =
+          emojione.emojioneList[emoji].unicode[
           emojione.emojioneList[emoji].unicode.length - 1
-        ];
-      const fullImagePath = `${imagePath}${shortNameForImage}.${imageType}${cacheBustParam}`;
-      emojiDisplay = (
-        <img
-          src={fullImagePath}
-          className={theme.emojiSelectPopoverEntryIcon}
-          draggable={false}
-          role="presentation"
-        />
-      );
+            ];
+        const fullImagePath = `${imagePath}${shortNameForImage}.${imageType}${cacheBustParam}`;
+        emojiDisplay = (
+          <img
+            src={fullImagePath}
+            className={theme.emojiSelectPopoverEntryIcon}
+            draggable={false}
+            role="presentation"
+          />
+        );
+      }
+    } else {
+      if(customEmojis && Array.isArray(customEmojis)) {
+        for (let data of customEmojis) {
+          const { shortname, image } = data;
+          if(image && shortname === emoji) {
+            emojiDisplay = (
+              <img src={image}
+                   className={theme.emojiSelectPopoverEntryIcon}
+                   draggable={false}
+                   role="presentation"
+              />
+            );
+            break;
+          }
+        }
+      }
     }
 
-    return (
+    return emojiDisplay && (
       <button
         type="button"
         className={
@@ -106,6 +127,6 @@ export default class Entry extends Component {
       >
         {emojiDisplay}
       </button>
-    );
+    ) || null;
   }
 }

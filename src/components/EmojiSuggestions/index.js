@@ -202,7 +202,8 @@ export default class EmojiSuggestions extends Component {
     const newEditorState = addEmoji(
       this.props.store.getEditorState(),
       emoji,
-      AddEmojiMode.REPLACE
+      AddEmojiMode.REPLACE,
+      this.props.customEmojis,
     );
     this.props.store.setEditorState(newEditorState);
   };
@@ -312,6 +313,7 @@ export default class EmojiSuggestions extends Component {
       shortNames, // eslint-disable-line no-unused-vars
       store, // eslint-disable-line no-unused-vars
       useNativeArt,
+      customEmojis,
       ...restProps
     } = this.props;
     return (
@@ -339,6 +341,7 @@ export default class EmojiSuggestions extends Component {
               imageType={imageType}
               cacheBustParam={cacheBustParam}
               useNativeArt={useNativeArt}
+              customEmojis={customEmojis}
             />
           ))
           .toJS()}

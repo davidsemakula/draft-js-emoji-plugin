@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import addEmoji from '../../../modifiers/addEmoji';
+import addEmoji, { Mode as AddEmojiMode } from '../../../modifiers/addEmoji';
 import Groups from './Groups';
 import Nav from './Nav';
 import ToneSelect from './ToneSelect';
@@ -62,7 +62,12 @@ export default class Popover extends Component {
   onWheel = e => e.preventDefault();
 
   onEmojiSelect = emoji => {
-    const newEditorState = addEmoji(this.props.store.getEditorState(), emoji);
+    const newEditorState = addEmoji(
+      this.props.store.getEditorState(),
+      emoji,
+      AddEmojiMode.INSERT,
+      this.props.customEmojis
+    );
     this.props.store.setEditorState(newEditorState);
   };
 
@@ -215,6 +220,7 @@ export default class Popover extends Component {
       emojis,
       isOpen = false,
       useNativeArt,
+      customEmojis,
     } = this.props;
     const className = isOpen
       ? theme.emojiSelectPopover
@@ -267,6 +273,7 @@ export default class Popover extends Component {
           }}
           useNativeArt={useNativeArt}
           isOpen={isOpen}
+          customEmojis={customEmojis}
         />
 
         {this.renderToneSelect()}

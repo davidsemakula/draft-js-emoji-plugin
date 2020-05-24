@@ -10,15 +10,42 @@ const Mode = {
   REPLACE: 'REPLACE', // replace emoji shortname
 };
 
-const addEmoji = (editorState, emojiShortName, mode = Mode.INSERT) => {
-  const unicode = emojiList.list[emojiShortName][0];
-  const emoji = convertShortNameToUnicode(unicode);
+const addEmoji = (editorState, emojiShortName, mode = Mode.INSERT, customEmojis=null) => {
+  let emojiText = '',
+    emojiData = { shortname: emojiShortName };
+
+  if(customEmojis && Array.isArray(customEmojis)) {
+    for (let emoji of customEmojis) {
+      const { id, shortname, image } = emoji;
+      if(image && shortname === emojiShortName) {
+        emojiText = shortname;
+        emojiData = {
+          ...emojiData,
+          id,
+          shortname,
+          image,
+        };
+        break;
+      }
+    }
+  }
+
+  if(!emojiText) {
+    const unicode = emojiList.list[emojiShortName][0];
+    emojiText = convertShortNameToUnicode(unicode);
+
+    emojiData = {
+      ...emojiData,
+      shortname: emojiShortName,
+      emojiUnicode: emojiText,
+    };
+  }
 
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity(
     'emoji',
     'IMMUTABLE',
-    { emojiUnicode: emoji }
+    emojiData,
   );
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
   const currentSelectionState = editorState.getSelection();
@@ -42,7 +69,7 @@ const addEmoji = (editorState, emojiShortName, mode = Mode.INSERT) => {
       emojiAddedContent = Modifier.insertText(
         afterRemovalContentState,
         targetSelection,
-        emoji,
+        emojiText,
         null,
         entityKey
       );
@@ -66,7 +93,7 @@ const addEmoji = (editorState, emojiShortName, mode = Mode.INSERT) => {
       emojiAddedContent = Modifier.replaceText(
         contentState,
         emojiTextSelection,
-        emoji,
+        emojiText,
         null,
         entityKey
       );

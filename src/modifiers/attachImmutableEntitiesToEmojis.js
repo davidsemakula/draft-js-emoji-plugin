@@ -10,9 +10,7 @@ const unicodeRegex = new RegExp(emojione.unicodeRegexp, 'g');
  * This is necessary as emojis consist of 2 characters (unicode). By making them
  * immutable the whole Emoji is removed when hitting backspace.
  */
-export default function attachImmutableEntitiesToEmojis(
-  editorState: EditorState
-): EditorState {
+export default function attachImmutableEntitiesToEmojis(editorState, customEmojis=null) {
   const contentState = editorState.getCurrentContent();
   const blocks = contentState.getBlockMap();
   let newContentState = contentState;
@@ -34,10 +32,31 @@ export default function attachImmutableEntitiesToEmojis(
         .set('anchorOffset', start)
         .set('focusOffset', end);
       const emojiText = plainText.substring(start, end);
+      let emojiData = null;
+
+      if(customEmojis && Array.isArray(customEmojis)) {
+        for (let emoji of customEmojis) {
+          const { id, shortname, image } = emoji;
+          if(image && shortname === emojiText) {
+            emojiData = {
+              ...emojiData,
+              id,
+              shortname,
+              image,
+            };
+            break;
+          }
+        }
+      }
+
+      if(!emojiText) {
+        emojiData = { emojiUnicode: emojiText };
+      }
+
       const contentStateWithEntity = newContentState.createEntity(
         'emoji',
         'IMMUTABLE',
-        { emojiUnicode: emojiText }
+        emojiData,
       );
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
 

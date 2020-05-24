@@ -1,8 +1,8 @@
 import findWithRegex from 'find-with-regex';
 import emojione from 'emojione';
 
-const unicodeRegex = new RegExp(emojione.unicodeRegexp, 'g');
+const unicodeRegex = new RegExp(`(:[A-Za-z_]+:)|(${emojione.unicodeRegexp})`, 'g');
 
-export default (contentBlock: Object, callback: Function) => {
+export default (contentBlock, callback) => {
   findWithRegex(unicodeRegex, contentBlock, callback);
 };
