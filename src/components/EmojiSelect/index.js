@@ -42,31 +42,24 @@ export default class EmojiSelect extends Component {
     isOpen: false,
   };
 
+  selectorRef = null;
+  popoverRef = null;
+
   // When the selector is open and users click anywhere on the page,
   // the selector should close
   componentDidMount() {
-    document.addEventListener('click', this.closePopover);
+    document.addEventListener('click', this.onOutsideClick);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.closePopover);
+    document.removeEventListener('click', this.onOutsideClick);
   }
 
-  onClick = e => {
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-  };
-
-  onButtonMouseUp = () =>
-    this.state.isOpen ? this.closePopover() : this.openPopover();
-
-  // Open the popover
-  openPopover = () => {
-    if (!this.state.isOpen) {
-      this.setState({
-        isOpen: true,
-      });
-    }
+  // Toggle the popover
+  togglePopover = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
   };
 
   // Close the popover
@@ -75,6 +68,14 @@ export default class EmojiSelect extends Component {
       this.setState({
         isOpen: false,
       });
+    }
+  };
+
+  onOutsideClick = (e) => {
+    if (this.popoverRef && !this.popoverRef.contains(e.target) &&
+      this.selectorRef && !this.selectorRef.contains(e.target)) {
+      // Ignore clicks inside popover or on selector
+      this.closePopover();
     }
   };
 
@@ -98,28 +99,31 @@ export default class EmojiSelect extends Component {
       : theme.emojiSelectButton;
 
     return (
-      <div className={theme.emojiSelect} onClick={this.onClick}>
+      <div className={theme.emojiSelect}>
         <button
           className={buttonClassName}
-          onMouseUp={this.onButtonMouseUp}
+          onMouseUp={this.togglePopover}
           type="button"
+          ref={node => (this.selectorRef = node)}
         >
           {selectButtonContent}
         </button>
-        <Popover
-          cacheBustParam={cacheBustParam}
-          imagePath={imagePath}
-          imageType={imageType}
-          theme={theme}
-          store={store}
-          groups={selectGroups}
-          emojiMap={emojiMap}
-          emojis={emojis}
-          toneSelectOpenDelay={toneSelectOpenDelay}
-          isOpen={this.state.isOpen}
-          useNativeArt={useNativeArt}
-          customEmojis={customEmojis}
-        />
+        <div ref={node => (this.popoverRef = node)}>
+          <Popover
+            cacheBustParam={cacheBustParam}
+            imagePath={imagePath}
+            imageType={imageType}
+            theme={theme}
+            store={store}
+            groups={selectGroups}
+            emojiMap={emojiMap}
+            emojis={emojis}
+            toneSelectOpenDelay={toneSelectOpenDelay}
+            isOpen={this.state.isOpen}
+            useNativeArt={useNativeArt}
+            customEmojis={customEmojis}
+          />
+        </div>
       </div>
     );
   }

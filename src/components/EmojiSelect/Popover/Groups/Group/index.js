@@ -23,7 +23,7 @@ export default class Group extends Component {
   };
 
   shouldComponentUpdate = nextProps => {
-    if(nextProps.query !== this.props.query) {
+    if(this.props.query !== nextProps.query || this.props.isActive !== nextProps.isActive) {
       return true;
     }
 
