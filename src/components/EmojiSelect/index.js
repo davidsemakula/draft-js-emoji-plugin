@@ -40,6 +40,8 @@ export default class EmojiSelect extends Component {
   // Start the selector closed
   state = {
     isOpen: false,
+    openUp: false,
+    openRight: false,
   };
 
   selectorRef = null;
@@ -49,6 +51,16 @@ export default class EmojiSelect extends Component {
   // the selector should close
   componentDidMount() {
     document.addEventListener('click', this.onOutsideClick);
+    this.evaluatePosition();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { isOpen } = this.state,
+      hasOpenChanged = isOpen !== prevState.isOpen;
+
+    if(isOpen && hasOpenChanged) {
+      this.evaluatePosition();
+    }
   }
 
   componentWillUnmount() {
@@ -78,6 +90,22 @@ export default class EmojiSelect extends Component {
       this.closePopover();
     }
   };
+
+  evaluatePosition = () => {
+    if(this.selectorRef) {
+      const viewportOffset = this.selectorRef.getBoundingClientRect();
+
+      const topOffset = viewportOffset.top,
+        bottomOffset = window.innerHeight - viewportOffset.bottom,
+        leftOffset = viewportOffset.left,
+        rightOffset = window.innerWidth - viewportOffset.right;
+
+      this.setState({
+        openUp: topOffset > bottomOffset,
+        openRight: rightOffset > leftOffset,
+      })
+    }
+  }
 
   render() {
     const {
@@ -120,6 +148,8 @@ export default class EmojiSelect extends Component {
             emojis={emojis}
             toneSelectOpenDelay={toneSelectOpenDelay}
             isOpen={this.state.isOpen}
+            openUp={this.state.openUp}
+            openRight={this.state.openRight}
             useNativeArt={useNativeArt}
             customEmojis={customEmojis}
           />

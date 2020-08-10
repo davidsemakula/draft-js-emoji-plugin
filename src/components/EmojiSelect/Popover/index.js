@@ -23,6 +23,8 @@ export default class Popover extends Component {
   static defaultProps = {
     isOpen: false,
     emojiMap: strategy,
+    openUp: false,
+    openRight: false,
   };
 
   state = {
@@ -219,11 +221,13 @@ export default class Popover extends Component {
       groups = [],
       emojis,
       isOpen = false,
+      openUp = false,
+      openRight = false,
       useNativeArt,
       customEmojis,
     } = this.props;
     const className = isOpen
-      ? theme.emojiSelectPopover
+      ? `${theme.emojiSelectPopover}${openUp?` ${theme.emojiSelectPopoverUp}`:''}${openRight?` ${theme.emojiSelectPopoverRight}`:''}`
       : theme.emojiSelectPopoverClosed;
     const { activeGroup, query } = this.state;
 

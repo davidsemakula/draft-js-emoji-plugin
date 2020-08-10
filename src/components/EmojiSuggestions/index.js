@@ -9,11 +9,16 @@ export default class EmojiSuggestions extends Component {
   state = {
     isActive: false,
     focusedOptionIndex: 0,
+    openUp: false,
   };
 
   UNSAFE_componentWillMount() {
     this.key = genKey();
     this.props.callbacks.onChange = this.onEditorStateChange;
+  }
+
+  componentDidMount() {
+    this.evaluatePosition();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,6 +52,13 @@ export default class EmojiSuggestions extends Component {
       Object.keys(newStyles).forEach(key => {
         this.popover.style[key] = newStyles[key];
       });
+    }
+
+    const { isActive } = this.state,
+      hasActiveChanged = isActive !== prevState.isActive;
+
+    if(isActive && hasActiveChanged) {
+      this.evaluatePosition();
     }
   }
 
@@ -293,8 +305,23 @@ export default class EmojiSuggestions extends Component {
     }
   };
 
+  evaluatePosition = () => {
+    if(this.popover) {
+      const viewportOffset = this.popover.getBoundingClientRect();
+
+      const topOffset = viewportOffset.top,
+        bottomOffset = window.innerHeight - viewportOffset.bottom;
+
+      this.setState({
+        openUp: topOffset > bottomOffset,
+      })
+    }
+  }
+
   render() {
-    if (!this.state.isActive) {
+    const { isActive, openUp } = this.state;
+
+    if (!isActive) {
       return null;
     }
 
@@ -316,10 +343,11 @@ export default class EmojiSuggestions extends Component {
       customEmojis,
       ...restProps
     } = this.props;
+
     return (
       <div
         {...restProps}
-        className={theme.emojiSuggestions}
+        className={`${theme.emojiSuggestions}${openUp?` ${theme.emojiSuggestionsUp}`:''}`}
         role="listbox"
         id={`emojis-list-${this.key}`}
         ref={element => {

@@ -132,6 +132,9 @@ export const defaultTheme = {
     box-sizing: border-box;
     transform: scale(0);
   `,
+  emojiSuggestionsUp: css`
+    transform: scale(1) translateY(-100%) translateY(-30px) !important;
+  `,
 
   emojiSuggestionsEntry: css`
     ${suggestionsEntryShared}
@@ -178,6 +181,14 @@ export const defaultTheme = {
     background: #fff;
     border: 1px solid #e0e0e0;
     box-shadow: 0 4px 30px 0 gainsboro;
+  `,
+  emojiSelectPopoverUp: css`
+    top: auto !important;
+    bottom: 100% !important;
+  `,
+  emojiSelectPopoverRight: css`
+    right: auto !important;
+    left: 0 !important;
   `,
   emojiSelectPopoverClosed: css`
     display: none;
