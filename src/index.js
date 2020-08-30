@@ -95,6 +95,7 @@ export default (config = {}) => {
     useNativeArt,
     excludedEmojis,
     customEmojis,
+    onEmojiSelect,
   } = config;
   const cacheBustParam = allowImageCache ? '' : defaultCacheBustParam,
     emojisWithUnicodeList = keys(emojiList.list);
@@ -140,6 +141,7 @@ export default (config = {}) => {
         .concat((customEmojis || []).map(emoji => emoji.shortname))),
     useNativeArt,
     customEmojis,
+    onEmojiSelect,
   };
   const selectProps = {
     cacheBustParam,
@@ -154,6 +156,7 @@ export default (config = {}) => {
     emojiMap: filteredEmojiMap,
     emojis: filteredEmojis,
     customEmojis,
+    onEmojiSelect,
   };
   const DecoratedEmojiSuggestions = props => (
     <EmojiSuggestions {...props} {...suggestionsProps} />

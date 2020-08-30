@@ -64,13 +64,18 @@ export default class Popover extends Component {
   onWheel = e => e.preventDefault();
 
   onEmojiSelect = emoji => {
-    const newEditorState = addEmoji(
-      this.props.store.getEditorState(),
-      emoji,
-      AddEmojiMode.INSERT,
-      this.props.customEmojis
-    );
-    this.props.store.setEditorState(newEditorState);
+    const { onEmojiSelect, customEmojis, store } = this.props;
+    if(onEmojiSelect) {
+      onEmojiSelect(emoji, customEmojis);
+    } else {
+      const newEditorState = addEmoji(
+        store.getEditorState(),
+        emoji,
+        AddEmojiMode.INSERT,
+        customEmojis
+      );
+      store.setEditorState(newEditorState);
+    }
   };
 
   onEmojiMouseDown = (emojiEntry, toneSet) => {
