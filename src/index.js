@@ -15,12 +15,15 @@ import { defaultTheme } from './theme.js';
 import defaultEmojiGroups from './constants/defaultEmojiGroups';
 import defaultEmojiMap from 'emojione/emoji.json';
 import createEmojisFromMap from './utils/createEmojisFromStrategy';
+import convertShortNameToUnicode from './utils/convertShortNameToUnicode';
 
 export {
   defaultTheme,
   defaultEmojiGroups,
   defaultEmojiMap,
   createEmojisFromMap,
+  emojiList,
+  convertShortNameToUnicode,
 };
 
 const defaultImagePath = '//cdn.jsdelivr.net/emojione/assets/svg/';
