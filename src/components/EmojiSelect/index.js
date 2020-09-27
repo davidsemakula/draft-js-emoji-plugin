@@ -138,23 +138,25 @@ export default class EmojiSelect extends Component {
           {selectButtonContent}
         </button>
         <div ref={node => (this.popoverRef = node)}>
-          <Popover
-            cacheBustParam={cacheBustParam}
-            imagePath={imagePath}
-            imageType={imageType}
-            theme={theme}
-            store={store}
-            groups={selectGroups}
-            emojiMap={emojiMap}
-            emojis={emojis}
-            toneSelectOpenDelay={toneSelectOpenDelay}
-            isOpen={this.state.isOpen}
-            openUp={this.state.openUp}
-            openRight={this.state.openRight}
-            useNativeArt={useNativeArt}
-            customEmojis={customEmojis}
-            onEmojiSelect={onEmojiSelect}
-          />
+          {this.state.isOpen && (
+            <Popover
+              cacheBustParam={cacheBustParam}
+              imagePath={imagePath}
+              imageType={imageType}
+              theme={theme}
+              store={store}
+              groups={selectGroups}
+              emojiMap={emojiMap}
+              emojis={emojis}
+              toneSelectOpenDelay={toneSelectOpenDelay}
+              isOpen={this.state.isOpen}
+              openUp={this.state.openUp}
+              openRight={this.state.openRight}
+              useNativeArt={useNativeArt}
+              customEmojis={customEmojis}
+              onEmojiSelect={onEmojiSelect}
+            />
+          )}
         </div>
       </div>
     );
