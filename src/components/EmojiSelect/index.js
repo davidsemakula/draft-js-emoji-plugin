@@ -27,6 +27,7 @@ export default class EmojiSelect extends Component {
     ]),
     toneSelectOpenDelay: PropTypes.number,
     useNativeArt: PropTypes.bool,
+    selectButtonRef: PropTypes.func,
   };
 
   static defaultProps = {
@@ -122,6 +123,7 @@ export default class EmojiSelect extends Component {
       emojis,
       customEmojis,
       onEmojiSelect,
+      selectButtonRef,
     } = this.props;
     const buttonClassName = this.state.isOpen
       ? theme.emojiSelectButtonPressed
@@ -133,7 +135,12 @@ export default class EmojiSelect extends Component {
           className={buttonClassName}
           onMouseUp={this.togglePopover}
           type="button"
-          ref={node => (this.selectorRef = node)}
+          ref={node => {
+            this.selectorRef = node;
+            if(selectButtonRef) {
+              selectButtonRef(node);
+            }
+          }}
         >
           {selectButtonContent}
         </button>
