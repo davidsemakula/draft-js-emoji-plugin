@@ -64,8 +64,8 @@ export default class Popover extends Component {
   onWheel = e => e.preventDefault();
 
   onEmojiSelect = emoji => {
-    const { onEmojiSelect, customEmojis, store } = this.props;
-    if(onEmojiSelect) {
+    const { onEmojiSelect, customEmojis, store, onClose } = this.props;
+    if(onEmojiSelect && typeof onEmojiSelect === 'function') {
       onEmojiSelect(emoji, customEmojis);
     } else {
       const newEditorState = addEmoji(
@@ -75,6 +75,9 @@ export default class Popover extends Component {
         customEmojis
       );
       store.setEditorState(newEditorState);
+    }
+    if(onClose && typeof onClose === 'function') {
+      onClose();
     }
   };
 

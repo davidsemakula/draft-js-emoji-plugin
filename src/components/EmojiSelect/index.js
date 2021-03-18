@@ -163,6 +163,7 @@ export default class EmojiSelect extends Component {
               isOpen={this.state.isOpen}
               openUp={this.state.openUp}
               openRight={this.state.openRight}
+              onClose={this.closePopover}
               useNativeArt={useNativeArt}
               customEmojis={customEmojis}
               onEmojiSelect={onEmojiSelect}
